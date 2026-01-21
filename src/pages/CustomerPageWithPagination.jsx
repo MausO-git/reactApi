@@ -1,8 +1,16 @@
 import { useState, useEffect } from "react";
 import Axios  from "axios";
+import Pagination from "../components/Pagination";
 
-const CustomersPage = (props) => {
+const CustomerPageWithPagination = (props) => {
     const [customers, setCustomers] = useState([]);
+    
+    // pour la pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+
+        // définir le nombre d'items par page
+    const itemsPerPage = 10;
     
     useEffect(()=>{
         Axios.get("http://127.0.0.1:8000/api/customers")
@@ -44,8 +52,13 @@ const CustomersPage = (props) => {
                     ))}
                 </tbody>
             </table>
+            <Pagination
+                currentPage={currentPage}
+                itemsPerPage={itemsPerPage}
+                length={totalItems}
+            />
         </>
      );
 }
  
-export default CustomersPage;
+export default CustomerPageWithPagination;
