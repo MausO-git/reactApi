@@ -5,6 +5,7 @@ import customersAPI from "../services/customersAPI";
 
 const CustomersPage = (props) => {
     const [customers, setCustomers] = useState([]);
+    const [search, setSearch] = useState("")
 
     //pour la pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -41,11 +42,22 @@ const CustomersPage = (props) => {
         }
     }
 
+    const handleSearch = (event) => {
+        const value = event.currentTarget.value
+        setSearch(value)
+        // remettre la pagination à 1 après la recherche
+        setCurrentPage(1)
+    }
+
     const paginatedCustomers = Pagination.getData(customers, currentPage, itemsPerPage)
 
     return ( 
         <>
             <h1>Liste des clients</h1>
+            {/* filtre */}
+            <div className="form-group my-3">
+                {/* <input type="text" className="form-control" placeholder="Rechercher..." value={search} onChange={handleSearch} /> */}
+            </div>
             <table className="table table-hover">
                 <thead>
                     <tr>

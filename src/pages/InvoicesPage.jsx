@@ -18,7 +18,7 @@ const STATUS_CLASSES = {
 const InvoicesPage = (props) => {
     const [invoices, setInvoices] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
-    const [search, setSearch] = useState()
+    const [search, setSearch] = useState("")
     const itemsPerPage = 25
 
     const fetchInvoice = async () => {
@@ -42,14 +42,28 @@ const InvoicesPage = (props) => {
 
     const formatDate = (str) => moment(str).format('DD/MM/YYYY')
 
-    const paginatedInvoices = Pagination.getData(invoices, currentPage, itemsPerPage)
+    const handleSearch = (event) => {
+        const value = event.currentTarget.value
+        setSearch(value)
+        // remettre la pagination à 1 après la recherche
+        setCurrentPage(1)
+    }
+
+    const filteredInvoices = invoices.filter(i =>
+        i.customer.lastName.toLowerCase().includes(search.toLowerCase()) ||
+        i.customer.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        i.amount.toString().includes(search.toLowerCase()) ||
+        STATUS_LABELS[i.status].toLowerCase().includes(search.toLowerCase())
+    )
+
+    const paginatedInvoices = Pagination.getData(filteredInvoices, currentPage, itemsPerPage)
 
     return (
         <>
             <h1>Liste des factures</h1>
             {/* filtre */}
             <div className="form-group my-3">
-                <input type="text" className="form-control" placeholder="Rechercher..." />
+                <input type="text" className="form-control" placeholder="Rechercher..." value={search} onChange={handleSearch} />
             </div>
             <table className="table table-hover">
                 <thead>
@@ -85,7 +99,7 @@ const InvoicesPage = (props) => {
             <Pagination 
                 currentPage = {currentPage}
                 itemsPerPage = {itemsPerPage}
-                length = {invoices.length}
+                length = {filteredInvoices.length}
                 onPageChanged = {handlePageChange}
             />
         </>
