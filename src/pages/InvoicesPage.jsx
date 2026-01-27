@@ -1,6 +1,7 @@
 import invoicesAPI from '../services/invoicesAPI'
 import {useState, useEffect} from 'react'
 import moment from 'moment'
+import Pagination from '../components/Pagination'
 
 const STATUS_LABELS = {
     PAID: 'Payée',
@@ -18,7 +19,7 @@ const InvoicesPage = (props) => {
     const [invoices, setInvoices] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [search, setSearch] = useState()
-    const itemsPerPage = 10
+    const itemsPerPage = 25
 
     const fetchInvoice = async () => {
         try{
@@ -31,11 +32,17 @@ const InvoicesPage = (props) => {
         }
     }
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page)
+    }
+
     useEffect(() => {
         fetchInvoice()
     },[])
 
     const formatDate = (str) => moment(str).format('DD/MM/YYYY')
+
+    const paginatedInvoices = Pagination.getData(invoices, currentPage, itemsPerPage)
 
     return (
         <>
@@ -56,7 +63,7 @@ const InvoicesPage = (props) => {
                     </tr>
                 </thead>
                 <tbody>
-                {invoices.map((invoice) => (
+                {paginatedInvoices.map((invoice) => (
                     <tr key={invoice.id}>
                         <td className="text-center">{invoice.id}</td>
                         <td className="text-center">{invoice.customer.firstName} {invoice.customer.lastName}</td>
@@ -75,6 +82,12 @@ const InvoicesPage = (props) => {
                 ))}
                 </tbody>
             </table>
+            <Pagination 
+                currentPage = {currentPage}
+                itemsPerPage = {itemsPerPage}
+                length = {invoices.length}
+                onPageChanged = {handlePageChange}
+            />
         </>
     )
 }
