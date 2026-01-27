@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Axios  from "axios";
 import Pagination from "../components/Pagination";
 import customersAPI from "../services/customersAPI";
 
@@ -49,14 +48,27 @@ const CustomersPage = (props) => {
         setCurrentPage(1)
     }
 
-    const paginatedCustomers = Pagination.getData(customers, currentPage, itemsPerPage)
+    const filteredCustomers = customers.filter(c =>
+        c.lastName.toLowerCase().includes(search.toLowerCase()) ||
+        c.firstName.toLowerCase().includes(search.toLowerCase()) ||
+        c.totalAmount.toString().includes(search.toLowerCase()) ||
+        c.unpaidAmount.toString().includes(search.toLowerCase()) ||
+        c.company?.toLowerCase().includes(search.toLowerCase()) ||
+        c.email.toLowerCase().includes(search.toLowerCase())
+    )
+
+    const paginatedCustomers = Pagination.getData(filteredCustomers, currentPage, itemsPerPage)
+
+    paginatedCustomers.map(customer => (
+        console.log(customer.totalAmount)
+    ))
 
     return ( 
         <>
             <h1>Liste des clients</h1>
             {/* filtre */}
             <div className="form-group my-3">
-                {/* <input type="text" className="form-control" placeholder="Rechercher..." value={search} onChange={handleSearch} /> */}
+                <input type="text" className="form-control" placeholder="Rechercher..." value={search} onChange={handleSearch} />
             </div>
             <table className="table table-hover">
                 <thead>
@@ -92,7 +104,7 @@ const CustomersPage = (props) => {
             <Pagination
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
-                length={customers.length}
+                length={filteredCustomers.length}
                 onPageChanged={handlePageChange}
             />
         </>
