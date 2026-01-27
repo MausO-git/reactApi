@@ -8,11 +8,13 @@ const Pagination = (props) => {
     }
 
     return (
+        
         <div>
             <ul className="pagination pagination-sm justify-content-center">
                 <li className={"page-item" + (props.currentPage === 1 ? " disabled" : null) }>
                     <button className="page-link" onClick={() => props.onPageChanged(props.currentPage - 1)}>&laquo;</button>
                 </li>
+
                 { pages.map(page => (
                     <li key={page} className={"page-item" + (props.currentPage === page ? " active" : null)}>
                         <button className="page-link" onClick={() => props.onPageChanged(page)}>{page}</button>
@@ -26,6 +28,12 @@ const Pagination = (props) => {
 
         </div>
     )
+}
+
+Pagination.getData = (items, currentPage, itemsPerPage) => {
+    const start = currentPage * itemsPerPage - itemsPerPage
+
+    return items.slice(start, start + itemsPerPage)
 }
 
 export default Pagination;

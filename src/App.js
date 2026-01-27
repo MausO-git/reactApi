@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import Navbar from './components/Navbar';
 import CustomersPage from './pages/CustomersPage';
 import CustomerPageWithPagination from './pages/CustomerPageWithPagination';
+import InvoicesPage from './pages/InvoicesPage'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/customers" element={<CustomersPage />} />
           <Route path="/customesrpage" element={<CustomerPageWithPagination />} />
+          <Route path="/invoices" element={<InvoicesPage />} />
         </Routes>
       </main>
     </Router>
