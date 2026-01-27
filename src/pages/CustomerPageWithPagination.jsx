@@ -12,12 +12,19 @@ const CustomerPageWithPagination = (props) => {
         // définir le nombre d'items par page
     const itemsPerPage = 10;
     
+    const handlePageChange = (page) => {
+        setCustomers([])
+        setCurrentPage(page)
+    }
+
     useEffect(()=>{
-        Axios.get("http://127.0.0.1:8000/api/customers")
-            .then(response => response.data.member)
-            .then(data => setCustomers(data))
-            .catch(error => console.log(error.response))
-    }, [])
+        Axios.get(`http://127.0.0.1:8000/api/customers?pagination=true&count=${itemsPerPage}&page=${currentPage}`)
+            .then(response => {
+                setCustomers(response.data.member)
+                setTotalItems(response.data.totalItems)
+            })
+            
+    }, [currentPage])
     return ( 
         <>
             <h1>Liste des clients</h1>
@@ -56,6 +63,7 @@ const CustomerPageWithPagination = (props) => {
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
                 length={totalItems}
+                onPageChanged={handlePageChange}
             />
         </>
      );
