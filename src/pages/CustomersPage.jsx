@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Pagination from "../components/Pagination";
 import customersAPI from "../services/customersAPI";
+import { Link } from "react-router-dom";
 
 const CustomersPage = (props) => {
     const [customers, setCustomers] = useState([]);
@@ -65,7 +66,10 @@ const CustomersPage = (props) => {
 
     return ( 
         <>
-            <h1>Liste des clients</h1>
+            <div className="d-flex justify-content-between align-items-center mb-3">
+                <h1>Liste des clients</h1>
+                <Link to="/customers/new" className="btn btn-primary">Créer un client</Link>
+            </div>
             {/* filtre */}
             <div className="form-group my-3">
                 <input type="text" className="form-control" placeholder="Rechercher..." value={search} onChange={handleSearch} />
@@ -80,6 +84,7 @@ const CustomersPage = (props) => {
                         <th>Factures</th>
                         <th className="text-center">Montant total</th>
                         <th className="text-center">Montant restant</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +100,7 @@ const CustomersPage = (props) => {
                             <td className="text-center">{customer.totalAmount.toLocaleString()}</td>
                             <td className="text-center">{customer.unpaidAmount.toLocaleString()}</td>
                             <td>
+                                <Link to={`/customers/${customer.id}`} className="btn btn-sm btn-warning mx-1">Editer</Link>
                                 <button className="btn btn-sm btn-danger" onClick={() => handleDelete(customer.id)}>Supprimer</button>
                             </td>
                         </tr>
